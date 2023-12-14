@@ -2,7 +2,7 @@ import streamlit as st
 
 import pandas as pd
 
-st.set_page_config(page_title="Meu Site Streamlit")
+st.set_page_config(page_title="Atividade final")
 
 with st.container():
 
