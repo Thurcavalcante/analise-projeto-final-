@@ -18,7 +18,7 @@ with st.container():
 
 def carregar_dados():
 
-    tabela = pd.read_csv("resultados.csv")
+    tabela = pd.read_csv("heart.csv")
 
     return tabela
 
@@ -34,4 +34,13 @@ with st.container():
 
     dados = dados[-num_dias:]
 
-    st.area_chart(dados, x="Data", y="Contratos")
+    st.area_chart(dados, x="Sex", y="Cholesterol")
+
+with st.container():
+
+    datafreme =  pd.read_csv('heart.csv')
+
+    datafreme
+
+
+
