@@ -29,12 +29,13 @@ col1, col2 = st.columns(2)
 col3, col4, col5 = st.columns(3) 
 
 # Gráfico de barras para mostrar a distribuição da idade
-fig_age = px.histogram(dados_filtered, x="Age", color="Sex", title="Distribuição de Idade") 
+fig_age = px.bar(dados_filtered, x="Sex", y="Age", color="ChestPainType", title="Distribuição de Idade") 
 col1.plotly_chart(fig_age, use_container_width=True)
 
 # Gráfico de contagem para mostrar a distribuição do sexo
-fig_sex = px.bar(dados_filtered, x="Sex", title="Distribuição de Sexo")
+fig_sex = px.bar(dados_filtered, x="Sex", y="Age", color="ChestPainType", title="Distribuição de Sexo",  orientation="h")
 col2.plotly_chart(fig_sex, use_container_width=True)
+
 
 # Gráfico de barras para mostrar o faturamento por dia
 fig_date = px.bar(dados_filtered, x="Sex", y="Age", color="ChestPainType", title="Faturamento por dia")
