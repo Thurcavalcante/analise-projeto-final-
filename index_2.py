@@ -10,49 +10,88 @@ st.set_page_config(layout="wide", page_title="Insuficiência Cardíaca")
 arquivo = 'heart.csv'
 dados = pd.read_csv(arquivo)
 
-# Mostrar conjunto de dados (opcional)
+st.title('Insuficiências Cardíacas')
+st.write('---')
+
 if st.checkbox("Mostrar Dados"):
     st.write(dados)
+    
+# Sidebar
+st.sidebar.image("dataset-cover.png", caption="Insuficiencia Cadiaca", use_column_width=True)
 
-# Adiciona controles deslizantes para a faixa etária
-age_range = st.sidebar.slider("Faixa Etária", int(dados["Age"].min()), int(dados["Age"].max()), (int(dados["Age"].min()), int(dados["Age"].max())))
+# Filtros
+Idade = st.sidebar.selectbox("Idade", dados["Age"].unique())
+dados_filtered = dados[dados["Age"] == Idade]
 
-# Adiciona um seletor de rádio para o sexo
-#sex = st.sidebar.radio("Sexo", dados["Sex"].unique())
+Sexo = st.sidebar.selectbox("Sexo", dados["Sex"].unique())
+dados_filtered = dados[dados["Sex"] == Sexo]
 
-# Filtragem dos Dados com Base nos Filtros Selecionados
-# Adiciona condições para idade e sexo
-dados_filtered = dados[(dados["Age"].between(age_range[0], age_range[1]))]
+TipoDeDor = st.sidebar.selectbox("Tipo de dor", dados["ChestPainType"].unique())
+dados_filtered = dados[dados["ChestPainType"] == TipoDeDor]
+
+Pressao = st.sidebar.selectbox("Pressão", dados["RestingBP"].unique())
+dados_filtered = dados[dados["RestingBP"] == Pressao]
+
+Colesterol = st.sidebar.selectbox("Colesterol", dados["Cholesterol"].unique())
+dados_filtered = dados[dados["Cholesterol"] == Colesterol]
+
+Glicemia = st.sidebar.selectbox("Glicemia", dados["FastingBS"].unique())
+dados_filtered = dados[dados["FastingBS"] == Glicemia]
+
+Eletro = st.sidebar.selectbox("Eletro", dados["RestingECG"].unique())
+dados_filtered = dados[dados["RestingECG"] == Eletro]
+
+BPM = st.sidebar.selectbox("BPM", dados["MaxHR"].unique())
+dados_filtered = dados[dados["MaxHR"] == BPM]
+
+DorPorExec = st.sidebar.selectbox("Dor por exec.", dados["ExerciseAngina"].unique())
+dados_filtered = dados[dados["ExerciseAngina"] == DorPorExec]
+
+InclST = st.sidebar.selectbox("Incl. ST", dados["ST_Slope"].unique())
+dados_filtered = dados[dados["ST_Slope"] == InclST]
+
+DCV = st.sidebar.selectbox("DCV", dados["HeartDisease"].unique())
+dados_filtered = dados[dados["HeartDisease"] == DCV]
 
 # Criação de Gráficos e Layout da Interface
-col1, col2 = st.columns(2) 
-col3, col4, col5 = st.columns(3) 
+col1, col2, col3 = st.columns(3) 
+col4, col5, col6 = st.columns(3) 
+col7, col8, col9 = st.columns(3)
 
-# Gráfico de barras para mostrar a distribuição da idade
-fig_age = px.bar(dados_filtered, x="Sex", y="Age", color="Sex", title="Distribuição de Idade") 
-col1.plotly_chart(fig_age, use_container_width=True)
+# Gráfico de contagem para mostrar a distribuição por gênero ok
+fig_sex = px.bar(dados_filtered, x="Sex", y="HeartDisease", color="Sex", title="Distribuição por Gênero")
+col1.plotly_chart(fig_sex, use_container_width=True)
 
-# Gráfico de contagem para mostrar a distribuição do sexo
-fig_sex = px.bar(dados_filtered, x="Age", y="Sex", color="Age", title="Distribuição de Sexo",  orientation="h")
-col2.plotly_chart(fig_sex, use_container_width=True)
+fig_age = px.bar(dados_filtered, x="HeartDisease", y="Age", color="Age", title="Distribuição de Idade") 
+col2.plotly_chart(fig_age, use_container_width=True)
 
-# Gráfico de barras para mostrar o faturamento por dia
-fig_date = px.bar(dados_filtered, x="Sex", y="Age", color="ChestPainType", title="Faturamento por dia")
-col3.plotly_chart(fig_date, use_container_width=True)
+# Gráfico de pizza para distribuição de tipos de dor
+fig_chest_pain = px.pie(dados_filtered, names="ChestPainType", title="Distribuição de Tipo de Dor")
+col3.plotly_chart(fig_chest_pain, use_container_width=True)
 
-# Gráfico de barras para mostrar o faturamento por dia
-fig_prod = px.bar(dados_filtered, x="Sex", y="Age", color="ChestPainType", title="Faturamento por dia", orientation="h")
-col4.plotly_chart(fig_prod, use_container_width=True)
+fig_date = px.bar(dados_filtered, x="Age", y="MaxHR", color="HeartDisease", title="Dispensão entre Idade e BPM)")
+col4.plotly_chart(fig_date, use_container_width=True)
 
-# Gráfico de barras para mostrar o faturamento por filial
-city_total = dados_filtered.groupby("Sex")[["Age"]].sum().reset_index()
-fig_city = px.bar(city_total, x="Sex", y="Age", color="Sex", title="Faturamento por filial")
-col5.plotly_chart(fig_city, use_container_width=True)
+fig_Idade_Influencia_genero = px.bar(dados_filtered, x="Age", y="HeartDisease", color="Sex", title="Dispensão de Idade de influencia por gêneros")
+col5.plotly_chart(fig_Idade_Influencia_genero, use_container_width=True)
 
+fig_prod = px.bar(dados_filtered, x="Sex", y="HeartDisease", color="HeartDisease", title="Contagem por Gênero e DCV")
+col6.plotly_chart(fig_prod, use_container_width=True)
 
+# Gráfico de barras empilhadas para distribuição de idade por sexo
+fig_age_sex = px.histogram(dados_filtered, x="Age", color="Sex", title="Distribuição de Idade por Sexo")
+col7.plotly_chart(fig_age_sex, use_container_width=True)
 
+# Gráfico de dispersão para pressão e colesterol
+fig_bp_cholesterol = px.scatter(dados_filtered, x="RestingBP", y="Cholesterol", color="HeartDisease", title="Relação entre Pressão e Colesterol")
+col8.plotly_chart(fig_bp_cholesterol, use_container_width=True)
 
-# -----------------------------
+# Boxplot para BPM (Frequência Cardíaca Máxima)
+fig_bpm_boxplot = px.box(dados_filtered, y="MaxHR", title="Distribuição da Frequência Cardíaca Máxima")
+col9.plotly_chart(fig_bpm_boxplot, use_container_width=True)
+
+# ----------------------------- #
+
 # import streamlit as st
 # import pandas as pd
 # import numpy as np
