@@ -10,9 +10,11 @@ st.set_page_config(layout="wide", page_title="Insuficiência Cardíaca")
 arquivo = 'heart.csv'
 dados = pd.read_csv(arquivo)
 
+# Título
 st.title('Insuficiências Cardíacas')
 st.write('---')
     
+# Descrição sobre o tema
 if st.checkbox('Sobre o tema'):
     st.write("As doenças cardiovasculares (DCV) são a causa número 1 de morte em todo o mundo, ceifando cerca de 17,9 milhões de vidas a cada ano, o que representa 31% de todas as mortes em todo o mundo. Quatro em cada cinco mortes por DCV são devidas a ataques cardíacos e acidentes vasculares cerebrais, e um terço destas mortes ocorre prematuramente em pessoas com menos de 70 anos de idade.")
     st.write("Quatro em cada cinco mortes por DCV são devidas a ataques cardíacos e acidentes vasculares cerebrais, e um terço destas mortes ocorre prematuramente em pessoas com menos de 70 anos de idade. A insuficiência cardíaca é um evento comum causado por DCV e este conjunto de dados contém 11 características que podem ser usadas para prever uma possível doença cardíaca.")
@@ -30,7 +32,7 @@ age_range = st.sidebar.slider("Faixa Etária", int(dados["Age"].min()), int(dado
 # Adiciona condições para idade e sexo
 dados_filtered = dados[(dados["Age"].between(age_range[0], age_range[1]))]
 
-# Criação de Gráficos e Layout da Interface
+# Layout da Interface separado por colunas
 col1, col2, col3 = st.columns(3)
 col4, col5, col6 = st.columns(3)
 col7, col8, col9 = st.columns(3)
